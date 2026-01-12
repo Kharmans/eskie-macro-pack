@@ -76,7 +76,7 @@ import { stunningFist } from "./on-target/stunning-fist.js";
 import { stunningStrike } from "./target/stunning-strike.js";
 import { suggestion } from "./target/suggestion.js";
 import { surprised } from "./token/surprised.js";
-import { teleport } from "./token/teleport.js";
+import { teleport } from "./template/teleport.js";
 import { burnMask } from "./token-mask/burn-mask.js";
 import { shatterMask } from "./token-mask/shatter-mask.js";
 import { tearMask } from "./token-mask/tear-mask.js";

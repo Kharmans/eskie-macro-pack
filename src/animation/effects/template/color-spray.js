@@ -8,7 +8,6 @@ import { autoanimations } from "../../../integration/autoanimations.js";
 
 const DEFAULT_CONFIG = {
     id: 'colorSpray',
-    template: undefined,
     wave_count: 10,
     delay: 200,
 }

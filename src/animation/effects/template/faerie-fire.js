@@ -9,7 +9,6 @@ const DEFAULT_CONFIG = {
     id: 'Faerie Fire',
     color: 'green',
     aoeDistance: 10,
-    template: undefined,
 };
 
 function getTintAndHue(color) {

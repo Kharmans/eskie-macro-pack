@@ -5,12 +5,10 @@ import { img } from "../../../../lib/filemanager.js";
 
 const DEFAULT_CONFIG = {
     id: 'TeleportIn',
-    position: null, // Placeholder for the position object
 };
 
 function create(token, targets, config = {}) {
-    const mConfig = foundry.utils.mergeObject(DEFAULT_CONFIG, config, {inplace:false});
-    const { id, position } = mConfig;
+    const { id, position } = foundry.utils.mergeObject(DEFAULT_CONFIG, config, {inplace:false});
     const maxDistance = Math.max(...targets.map(target => 3 * Math.max(Math.abs(target.x - token.x), Math.abs(target.y - token.y)) / canvas.dimensions.size + 1));
     const {x, y} = token.center;
 

@@ -10,7 +10,6 @@ import { autoanimations } from '../../../integration/autoanimations.js';
 
 const DEFAULT_CONFIG = {
     id: 'lightningBolt',
-    template: undefined,
     deleteTemplate: true,
     tintMap: true,
     sound: {

@@ -24,7 +24,6 @@ const DEFAULT_CONFIG = {
         icon: "icons/svg/padlock.svg"
     },
     deleteTemplate: true,
-    template: undefined,
 };
 
 /**

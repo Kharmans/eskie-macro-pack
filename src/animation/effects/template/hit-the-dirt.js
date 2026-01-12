@@ -8,7 +8,6 @@ import { autoanimations } from '../../../integration/autoanimations.js';
 const DEFAULT_CONFIG = {
     id: 'hitTheDirt',
     label: 'Hit the Dirt',
-    template: undefined,
 }
 
 async function create(token, config, options) {

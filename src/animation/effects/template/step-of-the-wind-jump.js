@@ -6,13 +6,11 @@ import { img } from "../../../lib/filemanager.js";
 import { autoanimations } from "../../../integration/autoanimations.js";
 
 const DEFAULT_CONFIG = {
-    id: 'step-of-the-wind-jump',
-    template: undefined,
+    id: 'step-of-the-wind-jump'
 };
 
 async function create(token, config = {}) {
-    const mConfig = foundry.utils.mergeObject(DEFAULT_CONFIG, config, { inplace: false });
-    let { id, template } = mConfig;
+    let { id, template } = foundry.utils.mergeObject(DEFAULT_CONFIG, config, { inplace: false });
 
     //Determine Jump Timings
     let jumpTime = 750;
