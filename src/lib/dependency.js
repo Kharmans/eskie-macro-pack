@@ -80,7 +80,8 @@ function isActivated(dependency, warnMessage) {
     let valid = activated && isValidVersion;
     if (!valid && warnMessage) {
         if (warnMessage.length) warnMessage += '\n';
-        warnMessage += `Warning: ${dependency?.id} is not activated and between expected versions:`;
+        const depRef = dependency?.id + (dependency?.ref) ? ` (${dependency?.ref})` : '';
+        warnMessage += `Warning: ${depRef} is not activated and between expected versions:`;
         warnMessage += _versionMessageAppend(dependency, _getEntity(dependency)?.version);
         console.warn(warnMessage);
     }
@@ -92,7 +93,8 @@ function isInstalled(dependency, warnMessage) {
     let valid = installed && isValidVersion;
     if (!valid && warnMessage) {
         if (warnMessage.length) warnMessage += '\n';
-        warnMessage += `Warning: ${dependency?.id} is not installed and between expected versions:`;
+        const depRef = dependency?.id + (dependency?.ref) ? ` (${dependency?.ref})` : '';
+        warnMessage += `Warning: ${depRef} is not installed and between expected versions:`;
         warnMessage += _versionMessageAppend(dependency, _getEntity(dependency)?.version);
         console.warn(warnMessage);
     }
@@ -135,7 +137,8 @@ function required(dependency) {
     let [isActivated, isValidVersion] = _isActivated(dependency);
     if (isActivated && isValidVersion) return;
 
-    let errorMsg = `Requires ${dependency?.id} to be installed and activated.`;
+    const depRef = dependency?.id + (dependency?.ref) ? ` (${dependency?.ref})` : '';
+    let errorMsg = `Requires ${depRef} to be installed and activated.`;
     errorMsg += _versionMessageAppend(dependency, _getEntity(dependency)?.version);
     throw errorMsg;
 }
@@ -152,8 +155,8 @@ function someRequired(dependencyList) {
         let [isActivated, isValidVersion] = _isActivated(dependency);
         if (isActivated && isValidVersion) return;
         if (errorMsg.length) errorMsg += '\n';
-        errorMsg += `Module: ${dependency?.id}`;
-        if (dependency?.ref) errorMsg += ` (${dependency?.ref})`;
+        const depRef = dependency?.id + (dependency?.ref) ? ` (${dependency?.ref})` : '';
+        errorMsg += `Module: ${depRef}`;
         errorMsg += _versionMessageAppend(dependency, _getEntity(dependency)?.version);
     }
     throw errorMsg;
