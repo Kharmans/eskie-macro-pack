@@ -14,7 +14,10 @@ function create(users = [], config = {}){
     // Catch the case where we pass in an array of users
     // Preference of this create function is single users
     const seq = new Sequence();
-    if (!canvas?.scene?.background?.src) return seq;
+    if (!canvas?.scene?.background?.src) {
+        console.warn('EMP | canvas.scene.background.src not set. Background blurring failed');
+        return seq;
+    }
 
     if (Array.isArray(users)) {
         users.forEach( u => { seq.addSequence(create(u, config)); });
