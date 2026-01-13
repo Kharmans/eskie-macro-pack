@@ -17,11 +17,6 @@
   "esmodules": [
     "src/module.js"
   ],
-  "styles": [
-    {
-      "src": "styles/eskie-macros.css"
-    }
-  ],
   "languages": [
     {
       "lang": "en",
@@ -93,6 +88,9 @@
         "ASSISTANT": "OWNER"
       }
     }
+  ],
+  "styles": [
+    "styles/eskie-macros.css"
   ],
   "socket": true,
   "flags": {}
