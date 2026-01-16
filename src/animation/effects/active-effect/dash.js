@@ -1,15 +1,11 @@
 import { autoanimations } from '../../../integration/autoanimations.js';
 import { socket } from '../../../integration/socketlib.js';
-import { dependency } from '../../../lib/dependency.js';
 import { img, snd } from '../../../lib/filemanager.js'
+import { tiles } from '../../utils/tiles.js';
 
 export const DEFAULT_CONFIG = {
     id: 'Cunning Action'
 };
-
-async function wait(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 function create(token, config = {}) {
     const { id } = foundry.utils.mergeObject(DEFAULT_CONFIG, config, {inplace:false});
@@ -50,78 +46,29 @@ function create(token, config = {}) {
 }
 
 async function play(token, config = {}) {
-    dependency.required({id: 'tagger', ref: "Tagger"});
-    dependency.required({id: 'token-attacher', ref: "Token Attacher"});
-    dependency.required({id: 'monks-active-tiles', ref: "Monk's Active Tile Triggers"});
-
-    const { id } = foundry.utils.mergeObject(DEFAULT_CONFIG, config, {inplace:false});
-    const label = `${id} - ${token.id}`;
-
-    const initialData = {
-        "texture.src": "icons/svg/d6-grey.svg",
-        "alpha": 0.1,
-        "hidden": true,
-        "x": token.x,
-        "y": token.y,
-        "width": canvas.grid.size * token.document.width,
-        "height": canvas.grid.size * token.document.width,
-    };
-    
-    const [tile] = await socket.tile.create(initialData);
-    await wait(100);
-
-    const MATTtriggers = ["exit", "manual"];
-    const MATTactions = [{
-        action: 'runcode',
-        data: {
-            code: 'eskie.effect.dash.macro.movement(token.object)'
-        },
-    }];
-    const updateData = {
-        "flags.monks-active-tiles.active": true,
-        "flags.monks-active-tiles.trigger": MATTtriggers,
-        "flags.monks-active-tiles.actions": MATTactions,
-        "flags.monks-active-tiles.controlled": "gm",
-    };
-    await socket.tile.edit(tile.id, updateData);
-    await Tagger.addTags(tile, label);
-
-    await tokenAttacher.attachElementToToken(tile, token, true);
+    const mergedConfig = foundry.utils.mergeObject(DEFAULT_CONFIG, config, {inplace:false});
+    const effectFunction = `eskie.effect.dash.macro.movement`;
+    const code = `${effectFunction}(token.object, tile)`;
+    await tiles.initialize(token, code, mergedConfig);    
     const sequence = create(token, config);
     return sequence?.play();
 }
 
 async function stop(token, config = {}) {
     const { id } = foundry.utils.mergeObject(DEFAULT_CONFIG, config, {inplace:false});
-    const label = `${id} - ${token.id}`;
-    const tiles = Tagger.getByTag(label);
+    const label = tiles.getLabel(id, token);
+    const taggerTiles = Tagger.getByTag(label);
 
-    tiles.forEach(async (tile) => { await socket.tile.destroy(tile.id); });
+    taggerTiles.forEach(async (tile) => { await socket.tile.destroy(tile.id); });
     Sequencer.EffectManager.endEffects({ name: label, object: token });
 }
 
-async function movement(token, config = {}) {
-    const { id } = foundry.utils.mergeObject(DEFAULT_CONFIG, config, { inplace: false });
-    const label = `${id} - ${token.id}`;
-    const tile = Tagger.getByTag(label)[0];
-
-    if (!game.user.isGM || !tile) return;
-
-    let tokenPosition = {x: token.center.x, y: token.center.y};
-    let tilePosition = {x: tile.x + tile.width/2, y: tile.y + tile.height/2};
-    let deltaX = tokenPosition.x - tilePosition.x;
-    let deltaY = tokenPosition.y - tilePosition.y;
-    let angleRadians = Math.atan2(deltaY, deltaX);
-    let distance = Math.hypot(tokenPosition.x - tilePosition.x, tokenPosition.y - tilePosition.y);
-    let speed = (6 * canvas.grid.size)/1000;
-    
-    let rotation = angleRadians * (180 / Math.PI);
-    const travelTime = (distance / speed);
-  
-    const trailLabel = `${label} - Trail`;
-    let activeTrailEffect = Sequencer.EffectManager.getEffects({ name: trailLabel, object: token }).length > 0;
-   
-    const sequenceMATT = new Sequence()
+async function movement(token, tile, config = {}) {
+    function travelSequence(config = {}) {
+        const { tile, rotation, travelTime, label } = config;
+        const tilePosition = tiles.getCenter(tile);
+        
+        const SequenceMATT = new Sequence()
         .effect()
             .file(img("eskie.smoke.01.black"))
             .atLocation(token)
@@ -130,7 +77,7 @@ async function movement(token, config = {}) {
             .belowTokens()
             .opacity(0.5)
             .tint("#696969")
-            .playIf(!activeTrailEffect)
+
         .effect()
             .file(img("eskie.particle.04.white"))
             .atLocation(token)
@@ -138,8 +85,9 @@ async function movement(token, config = {}) {
             .scaleToObject(1.35, {considerTokenScale: true})
             .playbackRate(1.5)
             .zIndex(1)
+
         .effect()
-            .name(trailLabel)
+            .name(`${label} - Trail`)
             .file(img("eskie.trail.token.generic.02.black"))
             .attachTo(token)
             .rotateTowards(tile,{attachTo: false})
@@ -150,7 +98,8 @@ async function movement(token, config = {}) {
             .timeRange(250, 750)
             .fadeOut(500, {ease:"easeOutQuint"})
             .filter("ColorMatrix", { saturate:3})
-            .playIf(travelTime >= 500  && !activeTrailEffect)
+            .playIf(travelTime >= 500)
+
         .effect()
             .file(img("eskie.trail.token.generic.02.black"))
             .attachTo(token)
@@ -160,12 +109,19 @@ async function movement(token, config = {}) {
             .opacity(1)
             .startTime(750)
             .playIf(travelTime < 500)   
+
         .wait(Math.max(travelTime-250,250))
+
         .thenDo(async () => {
-            Sequencer.EffectManager.endEffects({ name: trailLabel });
+            Sequencer.EffectManager.endEffects({ name: `${label} - Trail` });
         });
-  
-   await sequenceMATT.play();
+        
+        return SequenceMATT;
+    }
+
+    const mergedConfig = foundry.utils.mergeObject(DEFAULT_CONFIG, config, {inplace:false});
+    const {rotation, travelTime, label} = await tiles.configuration(token, tile, mergedConfig);
+    return travelSequence({tile, rotation, travelTime, label}).play();
 }
 
 
