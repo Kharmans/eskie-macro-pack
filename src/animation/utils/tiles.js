@@ -16,7 +16,7 @@ function getLabel(id, token) {
     return `${id} - ${token.id}`;
 }
 
-async function initialize(token, config = {}) {
+async function initialize(token, code, config = {}) {
     dependency.required({id: 'tagger', ref: "Tagger"});
     dependency.required({id: 'token-attacher', ref: "Token Attacher"});
     dependency.required({id: 'monks-active-tiles', ref: "Monk's Active Tile Triggers"});
@@ -40,9 +40,7 @@ async function initialize(token, config = {}) {
     const MATTtriggers = ["exit", "manual"];
     const MATTactions = [{
         action: 'runcode',
-        data: {
-            code: `eskie.effect.stepOfTheWind.move.macro.movement(token.object, tile)`
-        },
+        data: { code: code ?? `console.error(arguments)` },
     }];
     const updateData = {
         "flags.monks-active-tiles.active": true,
@@ -57,12 +55,11 @@ async function initialize(token, config = {}) {
     await tile.setFlag('world', id, { tileData: getCenter(tile) });
 }
 
-async function movement(token, tile, sequence, config = {}) {
+async function configuration(token, tile, config = {}) {
     const { id } = foundry.utils.mergeObject(DEFAULT_CONFIG, config, {inplace:false});
     const label = getLabel(id, token);
 
     if (!game.user.isGM || !tile) return;
-    if (!sequence) return;
 
     // Initial tokenPosition is where the tile was when the movement started
     // We wait until the tile has moved and calculate latency required for the animation
@@ -89,12 +86,12 @@ async function movement(token, tile, sequence, config = {}) {
     // Latency is too long to show the effect
     if (travelTime < 0) { return; }
 
-    return sequence({ tile, rotation, travelTime, label }).play();
+    return { rotation, travelTime, label };
 }
 
 export const tiles = {
     initialize,
-    movement,
+    configuration,
     getLabel,
     getCenter,
 }

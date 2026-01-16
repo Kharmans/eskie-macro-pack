@@ -65,7 +65,9 @@ function create(token, config = {}) {
 
 async function play(token, config = {}) {
     const mergedConfig = foundry.utils.mergeObject(DEFAULT_CONFIG, config, {inplace:false});
-    await tiles.initialize(token, mergedConfig);    
+    const effectFunction = `eskie.effect.stepOfTheWind.move.macro.movement`;
+    const code = `${effectFunction}(token.object, tile)`;
+    await tiles.initialize(token, code, mergedConfig);    
     const sequence = create(token, config);
     return sequence?.play();
 }
@@ -80,7 +82,6 @@ async function stop(token, config = {}) {
 }
 
 async function movement(token, tile, config = {}) {
-    const { id } = foundry.utils.mergeObject(DEFAULT_CONFIG, config, { inplace: false });
     function travelSequence(config = {}) {
         const { tile, rotation, travelTime, label } = config;
         const particleRepeats = travelTime / 250;
@@ -144,7 +145,9 @@ async function movement(token, tile, config = {}) {
         return SequenceMATT;
     }
 
-    return tiles.movement(token, tile, travelSequence, {id});
+    const mergedConfig = foundry.utils.mergeObject(DEFAULT_CONFIG, config, {inplace:false});
+    const {rotation, travelTime, label} = await tiles.configuration(token, tile, mergedConfig);
+    return travelSequence({tile, rotation, travelTime, label}).play();
 }
 
 
