@@ -61,10 +61,10 @@ async function configuration(token, tile, config = {}) {
 
     if (!game.user.isGM || !tile) return;
 
-    // Initial tokenPosition is where the tile was when the movement started
+    // Initial token position is where the tile was when the movement started
     // We wait until the tile has moved and calculate latency required for the animation
     const savedData = await tile.getFlag('world', id);
-        const tokenPosition = {x: savedData.tileData.x, y: savedData.tileData.y};
+        const tileOrigin = {x: savedData.tileData.x, y: savedData.tileData.y};
         function tileMoved() {
             const currentCenter = getCenter(tile);
             const savedCenter = savedData.tileData;
@@ -74,17 +74,14 @@ async function configuration(token, tile, config = {}) {
     await tile.setFlag('world', id, { tileData: getCenter(tile) });
 
     const tilePosition = getCenter(tile);
-    const deltaX = tokenPosition.x - tilePosition.x;
-    const deltaY = tokenPosition.y - tilePosition.y;
+    const deltaX = tileOrigin.x - tilePosition.x;
+    const deltaY = tileOrigin.y - tilePosition.y;
     const angleRadians = Math.atan2(deltaY, deltaX);
-    const distance = Math.hypot(tokenPosition.x - tilePosition.x, tokenPosition.y - tilePosition.y);
+    const distance = Math.hypot(tileOrigin.x - tilePosition.x, tileOrigin.y - tilePosition.y);
     const tokenSpeed = token._getAnimationMovementSpeed();
     const speed = (tokenSpeed * canvas.grid.size) / (1 * SECONDS);
     const rotation = angleRadians * (180 / Math.PI);
     const travelTime = (distance / speed) - latency;
-    
-    // Latency is too long to show the effect
-    if (travelTime < 0) { return; }
 
     return { rotation, travelTime, label };
 }

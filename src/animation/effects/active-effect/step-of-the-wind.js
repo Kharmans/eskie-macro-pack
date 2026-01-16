@@ -83,12 +83,18 @@ async function stop(token, config = {}) {
 
 async function movement(token, tile, config = {}) {
     function travelSequence(config = {}) {
-        const { tile, rotation, travelTime, label } = config;
+        const { rotation, travelTime, label } = config;
         const particleRepeats = travelTime / 250;
-        const tilePosition = tiles.getCenter(tile);
         
         //Play MATT Sequence
         const SequenceMATT = new Sequence()
+        .effect()
+            .file(img("eskie.smoke.01.white"))
+            .atLocation(token)
+            .spriteRotation(rotation)
+            .scaleToObject(1.75,{considerTokenScale: true})
+            .belowTokens()
+            
         .effect()
             .file(img("eskie.nature.flower.particle.01.blue"))
             .atLocation(token)
@@ -98,13 +104,7 @@ async function movement(token, tile, config = {}) {
             .duration(1500)
             .fadeOut(500)
             .repeats(particleRepeats, 250, 250)
-
-        .effect()
-            .file(img("eskie.smoke.01.white"))
-            .atLocation(token)
-            .spriteRotation(rotation)
-            .scaleToObject(1.75,{considerTokenScale: true})
-            .belowTokens()
+            .playIf(travelTime > 250)
 
         .effect()
             .name(`${label} - Trail`)
@@ -112,29 +112,13 @@ async function movement(token, tile, config = {}) {
             .attachTo(token)
             .rotateTowards(tile, {attachTo: false})
             .scaleToObject(1.5, {considerTokenScale: true})
-            .spriteOffset({x:-0.75-0.75},{gridUnits:true})
+            .spriteOffset({x: -(1.5 * token.document.width)}, {gridUnits:true})
             .opacity(1)
             .persist()
             .timeRange(250, 750)
             .fadeOut(500, {ease:"easeOutQuint"})
-            .filter("ColorMatrix", { saturate:3})
-            .playIf(travelTime >= 500)
-
-        .effect()
-            .file(img("eskie.trail.token.generic.01.white"))
-            .attachTo(token)
-            .rotateTowards(tilePosition)
-            .scaleToObject(1.5, {considerTokenScale: true})
-            .spriteOffset({x:-0.75-0.75},{gridUnits:true})
-            .opacity(1)
-            .filter("ColorMatrix", { saturate:3})
-            .startTime(750)
-            .playIf(travelTime < 500)   
-
-        .animation()
-            .delay(travelTime + 1000)
-            .on(tile)
-            .teleportTo(tilePosition, {relativeToCenter: true})
+            .filter("ColorMatrix", {saturate:3})
+            .playIf(travelTime > 250)
 
         .wait(Math.max(travelTime - 250, 250))
         

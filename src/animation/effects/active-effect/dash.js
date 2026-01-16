@@ -65,8 +65,7 @@ async function stop(token, config = {}) {
 
 async function movement(token, tile, config = {}) {
     function travelSequence(config = {}) {
-        const { tile, rotation, travelTime, label } = config;
-        const tilePosition = tiles.getCenter(tile);
+        const { rotation, travelTime, label } = config;
         
         const SequenceMATT = new Sequence()
         .effect()
@@ -85,32 +84,23 @@ async function movement(token, tile, config = {}) {
             .scaleToObject(1.35, {considerTokenScale: true})
             .playbackRate(1.5)
             .zIndex(1)
+            .playIf(travelTime > 250)
 
         .effect()
             .name(`${label} - Trail`)
             .file(img("eskie.trail.token.generic.02.black"))
             .attachTo(token)
-            .rotateTowards(tile,{attachTo: false})
+            .rotateTowards(tile, {attachTo: false})
             .scaleToObject(1.5, {considerTokenScale: true})
-            .spriteOffset({x:-0.75-0.75},{gridUnits:true})
+            .spriteOffset({x: -(1.5 * token.document.width)}, {gridUnits:true})
             .opacity(1)
             .persist()
             .timeRange(250, 750)
             .fadeOut(500, {ease:"easeOutQuint"})
-            .filter("ColorMatrix", { saturate:3})
-            .playIf(travelTime >= 500)
+            .filter("ColorMatrix", {saturate:3})
+            .playIf(travelTime > 250)
 
-        .effect()
-            .file(img("eskie.trail.token.generic.02.black"))
-            .attachTo(token)
-            .rotateTowards(tilePosition)
-            .scaleToObject(1.5, {considerTokenScale: true})
-            .spriteOffset({x:-0.75-0.75},{gridUnits:true})
-            .opacity(1)
-            .startTime(750)
-            .playIf(travelTime < 500)   
-
-        .wait(Math.max(travelTime-250,250))
+        .wait(Math.max(travelTime - 250, 250))
 
         .thenDo(async () => {
             Sequencer.EffectManager.endEffects({ name: `${label} - Trail` });
