@@ -134,7 +134,7 @@ async function movement(token, config = {}) {
 
     const savedData = await tile.getFlag('world', 'step-of-the-wind');
     function tileMoved() {
-        const currentCenter = {x: tile.x+tile.width/2, y: tile.y+tile.height/2};
+        const currentCenter = getCenter(tile);
         const savedCenter = savedData.tileData;
         return (currentCenter.x !== savedCenter.x) || (currentCenter.y !== savedCenter.y);
     }
@@ -144,16 +144,14 @@ async function movement(token, config = {}) {
     // Wait for the tile to actually move
     await utils.waitUntil(tileMoved, {timeout: 5000});
     const updatedTile = await fromUuid(tile.uuid);
+    await updatedTile.setFlag('world', 'step-of-the-wind', { tileData: getCenter(updatedTile) });
+
     const tilePosition = {x: updatedTile.x+updatedTile.width/2, y: updatedTile.y+updatedTile.height/2};
     const deltaX = tokenPosition.x - tilePosition.x;
     const deltaY = tokenPosition.y - tilePosition.y;
     const angleRadians = Math.atan2(deltaY, deltaX);
     const distance = Math.hypot(tokenPosition.x - tilePosition.x, tokenPosition.y - tilePosition.y);
     const speed = (6 * canvas.grid.size)/1000;
-
-    console.error("All the variables:");
-    console.error({tokenPosition, tilePosition, deltaX, deltaY, angleRadians, distance, speed});
-    
     const rotation = angleRadians * (180 / Math.PI);
     const travelTime = (distance / speed);
     const particleRepeats = travelTime / 250;
@@ -211,8 +209,6 @@ async function movement(token, config = {}) {
       
       .thenDo(async () => {
         Sequencer.EffectManager.endEffects({ name: `${label} - Trail` });
-        // The tile "instantly" moves, but the token takes time to catch up -- so tile.{x,y} is correct for where the token will be
-        await updatedTile.setFlag('world', 'step-of-the-wind', { tileData: getCenter(updatedTile) });
       });
     
    await SequenceMATT.play();
