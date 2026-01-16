@@ -74,6 +74,11 @@
         "id": "token-attacher",
         "type": "module",
         "compatibility": {}
+      },
+      {
+        "id": "monks-active-tiles",
+        "type": "module",
+        "compatibility": {}
       }
     ]
   },
