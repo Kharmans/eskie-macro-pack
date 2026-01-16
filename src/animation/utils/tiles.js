@@ -17,9 +17,9 @@ function getLabel(id, token) {
 }
 
 async function initialize(token, code, config = {}) {
-    dependency.required({id: 'tagger', ref: "Tagger"});
-    dependency.required({id: 'token-attacher', ref: "Token Attacher"});
-    dependency.required({id: 'monks-active-tiles', ref: "Monk's Active Tile Triggers"});
+    dependency.required([{id: 'tagger', ref: "Tagger"},
+                        {id: 'token-attacher', ref: "Token Attacher"},
+                        {id: 'monks-active-tiles', ref: "Monk's Active Tile Triggers"}]);
 
     const mergedConfig = foundry.utils.mergeObject(DEFAULT_CONFIG, config, {inplace:false});
     const { id } = mergedConfig;

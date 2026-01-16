@@ -133,13 +133,18 @@ function hasSomeRecommended(dependencyList) {
  * @param {object} dependency The dependency to check.
  * @returns {null | throw} 
  */
-function required(dependency) {
-    let [isActivated, isValidVersion] = _isActivated(dependency);
-    if (isActivated && isValidVersion) return;
+function required(dependencyList) {
+    if (!Array.isArray(dependencyList)) required([dependencyList]);
+    let errorMsg = `Requires all of the following to be installed and activaged:\n`;
 
-    const depRef = dependency?.id + (dependency?.ref) ? ` (${dependency?.ref})` : '';
-    let errorMsg = `Requires ${depRef} to be installed and activated.`;
-    errorMsg += _versionMessageAppend(dependency, _getEntity(dependency)?.version);
+    for (let dependency of dependencyList) {
+        let [isActivated, isValidVersion] = _isActivated(dependency);
+        if (isActivated && isValidVersion) return;
+
+        const depRef = dependency?.id + ((dependency?.ref) ? ` (${dependency?.ref})` : '');
+        errorMsg += `\nModule: ${depRef}`;
+        errorMsg += _versionMessageAppend(dependency, _getEntity(dependency)?.version);
+    }
     throw errorMsg;
 }
 

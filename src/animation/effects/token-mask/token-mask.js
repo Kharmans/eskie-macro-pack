@@ -68,8 +68,8 @@ async function createTiles(token, config) {
 }
 
 async function create(token, config = {}) {
-    dependency.required({id: 'token-attacher', ref: "Token Attacher"});
-    dependency.required({id: 'monks-active-tiles', ref: "Monk's Active Tile Triggers"});
+    dependency.required([{id: 'token-attacher', ref: "Token Attacher"},
+                        {id: 'monks-active-tiles', ref: "Monk's Active Tile Triggers"}]);
 
     const { id, deleteToken, revealOverlay, tokenOverlay, padding, rotation } = foundry.utils.mergeObject(DEFAULT_CONFIG, config, {inplace:false});
     if ( !tokenOverlay || !revealOverlay ) {
