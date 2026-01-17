@@ -1,11 +1,13 @@
 // Original Author: EskieMoh#2969
 // Modular Conversion: bakanabaka
 
-import { autoanimations } from '../../../integration/autoanimations.js';
-import { socket } from '../../../integration/socketlib.js';
-import { closest } from '../../../lib/filemanager.js'
+import { time } from "../../../lib/time.js";
 import { matt } from '../../utils/matt-tiles.js';
+import { closest } from '../../../lib/filemanager.js';
 import { dependency } from "../../../lib/dependency.js";
+import { socket } from '../../../integration/socketlib.js';
+import { autoanimations } from '../../../integration/autoanimations.js';
+import { MODULE_ID } from "../../../lib/constants.js";
 
 export const DEFAULT_CONFIG = {
     id: 'Sandevistan',
@@ -73,16 +75,19 @@ async function play(token, config = {}) {
 }
 
 async function stop(token, config = {}) {
-    const { id } = foundry.utils.mergeObject(DEFAULT_CONFIG, config, {inplace:false});
+    const { id, imageDuration } = foundry.utils.mergeObject(DEFAULT_CONFIG, config, {inplace:false});
     const label = matt.getLabel(id, token);
     const tiles = Tagger.getByTag(label);
 
-    tiles.forEach(async (tile) => { await socket.tile.destroy(tile.id); });
-    Sequencer.EffectManager.endEffects({ name: label, object: token });
-
     const endSequence = new Sequence();
-    endSequence.thenDo(() => {
+    endSequence.thenDo(async () => {
         Sequencer.EffectManager.endEffects({ name: `${label} - Trail` });
+        if (imageDuration <= 0) {
+            function imagesRemoved() { return  Sequencer.EffectManager.getEffects({ name: `${label} - Trail` }).length === 0; }
+            await time.waitUntil(imagesRemoved, {timeout: 5000});
+        }
+        tiles.forEach(async (tile) => { await socket.tile.destroy(tile.id); });
+        Sequencer.EffectManager.endEffects({ name: label, object: token });
         FXMASTER.filters.switch("SandyfilterID", "color", {
             color: { value: "#76feb1", apply: false },
         });
@@ -90,19 +95,21 @@ async function stop(token, config = {}) {
     await endSequence.play();
 }
 
-async function movement(token, tile, config = {}) {
+async function movement(token, tile) {
+    const config = tile.getFlag(MODULE_ID, 'config') ?? {};
     function travelSequence(config = {}) {
         const { travelTime, label, msPerImage, imageDuration } = config;
 
-        const afterImageSequence = new Sequence();
+        let seq = new Sequence();
         const repeats = Math.floor(travelTime / msPerImage);
 
         for (let i = 0; i < repeats; i++) {
-            afterImageSequence.effect()
+            seq = seq.effect()
                 .atLocation(token)
-                .name(`${label} - Trail`)
-                .duration(imageDuration)
-                .delay(msPerImage * i)
+                .name(`${label} - Trail`);
+            if (imageDuration > 0) seq = seq.duration(imageDuration);
+            else seq = seq.persist();
+            seq = seq.delay(msPerImage * i)
                 .copySprite(token)
                 .belowTokens()
                 .opacity(1)
@@ -111,7 +118,7 @@ async function movement(token, tile, config = {}) {
                 .filter("ColorMatrix", { hue: 1.5 * i })
                 .zIndex(0);
         }
-        return afterImageSequence;
+        return seq;
     }
 
     const mergedConfig = foundry.utils.mergeObject(DEFAULT_CONFIG, config, {inplace:false});

@@ -23,6 +23,7 @@ async function initialize(token, code, config = {}) {
 
     const mergedConfig = foundry.utils.mergeObject(DEFAULT_CONFIG, config, {inplace:false});
     const { id } = mergedConfig;
+    const { info, ...nonInfoConfig } = mergedConfig;
     const label = getLabel(id, token);
 
     const initialData = {
@@ -53,6 +54,7 @@ async function initialize(token, code, config = {}) {
 
     await tokenAttacher.attachElementToToken(tile, token, true);
     await tile.setFlag(MODULE_ID, id, { tileData: getCenter(tile) });
+    await tile.setFlag(MODULE_ID, 'config', nonInfoConfig);
 }
 
 async function configuration(token, tile, config = {}) {
