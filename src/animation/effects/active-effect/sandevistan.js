@@ -1,11 +1,12 @@
 // Original Author: EskieMoh#2969
 // Modular Conversion: bakanabaka
 
-import { autoanimations } from '../../../integration/autoanimations.js';
-import { socket } from '../../../integration/socketlib.js';
-import { closest } from '../../../lib/filemanager.js'
+import { time } from "../../../lib/time.js";
 import { matt } from '../../utils/matt-tiles.js';
+import { closest } from '../../../lib/filemanager.js';
 import { dependency } from "../../../lib/dependency.js";
+import { socket } from '../../../integration/socketlib.js';
+import { autoanimations } from '../../../integration/autoanimations.js';
 
 export const DEFAULT_CONFIG = {
     id: 'Sandevistan',
@@ -73,16 +74,20 @@ async function play(token, config = {}) {
 }
 
 async function stop(token, config = {}) {
-    const { id } = foundry.utils.mergeObject(DEFAULT_CONFIG, config, {inplace:false});
-    const label = matt.getLabel(id, token);
+    const { id, imageDuration } = foundry.utils.mergeObject(DEFAULT_CONFIG, config, {inplace:false});
+    const label = matt.getLabel(/Users/loki/Downloads/Sandevistan.jsid, token);
     const tiles = Tagger.getByTag(label);
 
     tiles.forEach(async (tile) => { await socket.tile.destroy(tile.id); });
     Sequencer.EffectManager.endEffects({ name: label, object: token });
 
     const endSequence = new Sequence();
-    endSequence.thenDo(() => {
+    endSequence.thenDo(async () => {
         Sequencer.EffectManager.endEffects({ name: `${label} - Trail` });
+        if (imageDuration <= 0) {
+            function imagesRemoved() { return  Sequencer.EffectManager.getEffects({ name: `${label} - Trail` }).length === 0; }
+            await time.waitUntil(imagesRemoved, {timeout: 5000});
+        }
         FXMASTER.filters.switch("SandyfilterID", "color", {
             color: { value: "#76feb1", apply: false },
         });
@@ -101,7 +106,6 @@ async function movement(token, tile, config = {}) {
             afterImageSequence.effect()
                 .atLocation(token)
                 .name(`${label} - Trail`)
-                .duration(imageDuration)
                 .delay(msPerImage * i)
                 .copySprite(token)
                 .belowTokens()
@@ -110,6 +114,8 @@ async function movement(token, tile, config = {}) {
                 .extraEndDuration(500)
                 .filter("ColorMatrix", { hue: 1.5 * i })
                 .zIndex(0);
+            if (imageDuration > 0) afterImageSequence.duration(imageDuration);
+            else afterImageSequence.persist();
         }
         return afterImageSequence;
     }
