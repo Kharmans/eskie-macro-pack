@@ -85,15 +85,10 @@ async function create(token, config, options) {
         // Update the actual token
         .animation()
             .on(token)
-            .teleportTo(adjust(position))
+            .teleportTo(position, {relativeToCenter: true})
             .rotate(token.document.rotation+90)
             .opacity(1);
     return seq;
-}
-
-// Hacky fix for teleportTo -- Crosshair.show gives .center, but teleportTo expects the top-left corner
-function adjust(position) {
-    return {x: position.x - canvas.grid.size / 2, y: position.y - canvas.grid.size / 2};
 }
 
 async function play(token, config) {
