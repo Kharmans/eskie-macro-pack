@@ -57,7 +57,7 @@ async function createBanish(target, config = {}) {
     let runeDelay = 0;
     let animationDelay = 4000;
     const runeSoundFile = closest('psfx.casting.generic.001');
-    const runeImageFile = img(`jb2a.magic_signs.rune.conjuration.complete.${color}`);
+    const runeImageFile = closest(`jb2a.magic_signs.rune.conjuration.complete.${color}`);
     for (const rune of RUNE_DATA.runes) {
         sequence.sound()
             .file(runeSoundFile)

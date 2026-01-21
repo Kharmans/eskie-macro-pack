@@ -40,7 +40,7 @@ async function create(position, config = {}) {
 
     sequence.effect()
         .delay(250)
-        .file(closest("jb2a.impact.ground_crack.blue.01")) // Use img() for paths
+        .file(closest("jb2a.impact.ground_crack.blue.01")) // Use closest() for paths
         .atLocation(position)
         .belowTokens()
         .randomRotation()

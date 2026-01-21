@@ -195,7 +195,7 @@ async function create(token, config) {
 
         .effect()
         .name(id)
-        .file(planeImage) // This is an external URL, so no img() helper
+        .file(planeImage) // This is an external URL, so no closest() helper
         .atLocation(position)
         .persist()
         .anchor({ x: 0.5, y: 0.6 })
