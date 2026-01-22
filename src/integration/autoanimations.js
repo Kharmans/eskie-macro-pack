@@ -157,7 +157,7 @@ async function submit() {
     if (!shouldUpdate) return;
     console.error('EMP display');
 
-    if (!dependency.isActivated({ id: "autoanimations", min: "6.5.1" }, "EMP | Automated Animations integration skipped.")) { return; }
+    //if (!dependency.isActivated({ id: "autoanimations", min: "6.5.1" }, "EMP | Automated Animations integration skipped.")) { return; }
     const { missingEntriesList, updatedEntriesList, customEntriesList } = await generateAutorecUpdate(EMP_AA_Menu, true);
     if (missingEntriesList.length || updatedEntriesList.length || customEntriesList.length) {
         new autorecUpdateFormApplication(EMP_AA_Menu).render(true);
