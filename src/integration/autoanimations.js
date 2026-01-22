@@ -152,9 +152,10 @@ async function submit() {
     const developmentVersion = "#{VERSION}#";
     const moduleVersion = game.modules.get(MODULE_ID).version;
     const lastUpdate = game.settings.get(MODULE_ID, "autorecVersion");
-    const shouldUpdate = moduleVersion == developmentVersion || foundry.utils.isNewerVersion(moduleVersion, lastUpdate);
-    console.error("EMP DEBUG | ", moduleVersion, lastUpdate, foundry.utils.isNewerVersion(moduleVersion, lastUpdate));
+    const shouldUpdate = (moduleVersion === developmentVersion) || foundry.utils.isNewerVersion(moduleVersion, lastUpdate);
+    console.error("EMP DEBUG | ", moduleVersion, lastUpdate, foundry.utils.isNewerVersion(moduleVersion, lastUpdate), shouldUpdate);
     if (!shouldUpdate) return;
+    console.error('EMP display');
 
     if (!dependency.isActivated({ id: "autoanimations", min: "6.5.1" }, "EMP | Automated Animations integration skipped.")) { return; }
     const { missingEntriesList, updatedEntriesList, customEntriesList } = await generateAutorecUpdate(EMP_AA_Menu, true);
@@ -164,8 +165,11 @@ async function submit() {
         console.info("EMP | All Eskie Macro animations are up to date!");
     }
 
-    if (moduleVersion != developmentVersion)
+    console.error('EMP | Version set', moduleVersion != developmentVersion);
+    if (moduleVersion != developmentVersion) {
         game.modules.set(MODULE_ID, "autorecVersion", moduleVersion);
+        console.error('EMP | Set version');
+    }
 }
 
 export const autoanimations = {
