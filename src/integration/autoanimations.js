@@ -153,6 +153,7 @@ async function submit() {
     const moduleVersion = game.modules.get(MODULE_ID).version;
     const lastUpdate = game.settings.get(MODULE_ID, "autorecVersion");
     const shouldUpdate = moduleVersion == developmentVersion || foundry.utils.isNewerVersion(moduleVersion, lastUpdate);
+    console.error("EMP DEBUG | ", moduleVersion, lastUpdate, foundry.utils.isNewerVersion(moduleVersion, lastUpdate));
     if (!shouldUpdate) return;
 
     if (!dependency.isActivated({ id: "autoanimations", min: "6.5.1" }, "EMP | Automated Animations integration skipped.")) { return; }
