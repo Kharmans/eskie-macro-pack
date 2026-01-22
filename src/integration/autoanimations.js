@@ -164,7 +164,7 @@ async function submit() {
     }
 
     if (moduleVersion != developmentVersion)
-        game.modules.set(MODULE_ID, "autorecVersion", moduleVersion);
+        game.settings.set(MODULE_ID, "autorecVersion", moduleVersion);
 }
 
 export const autoanimations = {
