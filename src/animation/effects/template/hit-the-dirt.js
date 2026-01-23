@@ -19,7 +19,7 @@ async function create(token, config, options) {
         icon: 'icons/magic/control/silhouette-fall-slip-prone.webp', 
         label: 'Hit The Dirt!'
     };
-    let position = await templates.getPosition(template, cfg);
+    let [position, _] = await templates.getPosition(template, cfg);
     if (!position) { return; }
 
     let seq = new Sequence()

@@ -80,7 +80,7 @@ function isActivated(dependency, warnMessage) {
     let valid = activated && isValidVersion;
     if (!valid && warnMessage) {
         if (warnMessage.length) warnMessage += '\n';
-        const depRef = dependency?.id + (dependency?.ref) ? ` (${dependency?.ref})` : '';
+        const depRef = dependency?.id + ((dependency?.ref) ? ` (${dependency?.ref})` : '');
         warnMessage += `Warning: ${depRef} is not activated and between expected versions:`;
         warnMessage += _versionMessageAppend(dependency, _getEntity(dependency)?.version);
         console.warn(warnMessage);
@@ -93,7 +93,7 @@ function isInstalled(dependency, warnMessage) {
     let valid = installed && isValidVersion;
     if (!valid && warnMessage) {
         if (warnMessage.length) warnMessage += '\n';
-        const depRef = dependency?.id + (dependency?.ref) ? ` (${dependency?.ref})` : '';
+        const depRef = dependency?.id + ((dependency?.ref) ? ` (${dependency?.ref})` : '');
         warnMessage += `Warning: ${depRef} is not installed and between expected versions:`;
         warnMessage += _versionMessageAppend(dependency, _getEntity(dependency)?.version);
         console.warn(warnMessage);
@@ -163,7 +163,7 @@ function someRequired(dependencyList) {
         let [isActivated, isValidVersion] = _isActivated(dependency);
         if (isActivated && isValidVersion) return;
         if (errorMsg.length) errorMsg += '\n';
-        const depRef = dependency?.id + (dependency?.ref) ? ` (${dependency?.ref})` : '';
+        const depRef = dependency?.id + ((dependency?.ref) ? ` (${dependency?.ref})` : '');
         errorMsg += `Module: ${depRef}`;
         errorMsg += _versionMessageAppend(dependency, _getEntity(dependency)?.version);
     }

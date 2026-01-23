@@ -18,7 +18,7 @@ async function create(token, config = {}) {
         icon: 'modules/jb2a_patreon/Library/Generic/Portals/Portal_Bright_Purple_V_400x250.webm', 
         label: 'Dimension Door'
     };
-    let position = await templates.getPosition(template, cfg);
+    let [position, _] = await templates.getPosition(template, cfg);
     if (!position) { return; }
 
     let sequence = new Sequence()

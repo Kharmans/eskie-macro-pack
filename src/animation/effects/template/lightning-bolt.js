@@ -29,8 +29,8 @@ async function create(token, config = {}) {
         icon: 'modules/jb2a_patreon/Library/Generic/Portals/Portal_Bright_Purple_V_400x250.webm', 
         label: id
     };
-    let position = await templates.getPosition(template, cfg);
-    if (!position || position.cancelled) { return; }
+    let [primary, secondary] = await templates.getPosition(template, cfg);
+    if (!secondary || primary.cancelled) { return; }
 
     const sequence = new Sequence();
 
@@ -72,7 +72,7 @@ async function create(token, config = {}) {
         .effect()
             .file(closest("eskie.lightning.02.blue"))
             .atLocation(token)
-            .rotateTowards(position)
+            .rotateTowards(secondary)
             .size({width:2, height:1.8}, {gridUnits:true})
             .spriteOffset({x:-0.25}, {gridUnits:true})
             .spriteScale({x:1.25})
@@ -83,7 +83,7 @@ async function create(token, config = {}) {
         .effect()
             .file(closest("eskie.lightning.03.blue"))
             .atLocation(token)
-            .rotateTowards(position)
+            .rotateTowards(secondary)
             .size({width:2, height:1.8}, {gridUnits:true})
             .spriteOffset({x:-0.5}, {gridUnits:true})
             .spriteScale({x:1.25})
@@ -96,8 +96,8 @@ async function create(token, config = {}) {
         
         .effect()
             .file(closest("eskie.lightning.lightning_bolt.blue"))
-            .atLocation(token)
-            .stretchTo(position, {tiling: false, onlyX: true})
+            .atLocation(primary)
+            .stretchTo(secondary, {tiling: false, onlyX: true})
             .filter("ColorMatrix", {hue:-12, saturate:2 })
             .zIndex(3)
             .waitUntilFinished(-250)
@@ -109,7 +109,7 @@ async function create(token, config = {}) {
         .effect()
             .file(closest("eskie.lightning.04.blue"))
             .atLocation(token)
-            .rotateTowards(position)
+            .rotateTowards(secondary)
             .size({width:1.2, height:1}, {gridUnits:true})
             .spriteScale({x:1.25})
             .filter("ColorMatrix", {hue:-12, saturate:2 })

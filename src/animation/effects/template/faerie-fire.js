@@ -43,7 +43,7 @@ async function createCloud(token, config = {}) {
         icon: 'modules/jb2a_patreon/Library/Generic/Portals/Portal_Bright_Purple_V_400x250.webm', 
         label: 'Faerie Fire'
     };
-    let position = await templates.getPosition(template, cfg);
+    let [position, _] = await templates.getPosition(template, cfg);
     if (!position) { return; }
 
     const sequence = new Sequence();

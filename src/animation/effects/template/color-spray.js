@@ -1,118 +1,114 @@
-//Last Updated: 12/21/2025
-//Author: EskieMoh#2969
-//Modified by: Gornetron
+//Last Updated: 1/22/2026
+//Author: .eskie
 //Modular by: bakanabaka
 
 import { closest } from "../../../lib/filemanager.js";
+import { templates } from "../../../lib/templates.js";
 import { autoanimations } from "../../../integration/autoanimations.js";
 
 const DEFAULT_CONFIG = {
     id: 'colorSpray',
-    wave_count: 10,
-    delay: 200,
-}
-
-function createSpellCircle(token, mConfig) {
-    const { position } = mConfig;
-    const seq = new Sequence()
-        .effect()
-            .file(closest("jb2a.particles.outward.greenyellow.02.03"))
-            .atLocation(token) 
-            .delay(150)
-            .anchor({ x: 0.1})
-            .size(2.5,{gridUnits:true})
-            .rotateTowards(position, {randomOffset: 0.25, cacheLocation: true})
-            .fadeIn(1400, {ease:"easeOutBack"})
-            .filter("ColorMatrix", {saturate: -1, brightness:2})
-            .fadeOut(400)
-            .duration(7000)
-            .opacity(0.8)
-            .zIndex(3)
-
-        .effect()
-            .attachTo(token)
-            .anchor({ x: -0.5 })
-            .size({width:0.4,height:1},{gridUnits:true})
-            .file(closest("jb2a.magic_signs.circle.02.illusion.loop.yellow"))
-            .rotateTowards(position)
-            .mirrorY()
-            .scaleIn(0, 500, {ease: "easeOutCubic"})
-            .scaleOut(0, 500, {ease: "easeOutCubic"})
-            .loopProperty("alphaFilter", "alpha", { from: 0, to: -0.5, duration: 1000,pingPong:true})
-            .filter("ColorMatrix", {saturate: -1, brightness:1.2})
-            .fadeOut(300)
-            .duration(7000)
-
-        .zIndex(0);
-    return seq;
-}
-
-function createBolt(token, i, mConfig) {
-    const { delay, position } = mConfig;
-
-    const seq = new Sequence()
-        .effect()
-            .file("jb2a.energy_strands.range.standard.blue")
-            .atLocation(token, {offset:{x:0.2},gridUnits:true, local:true}) 
-            .delay(i * delay)
-            .stretchTo(position, {randomOffset: 1, gridUnits: true, cacheLocation: true})
-            .filter("ColorMatrix", {hue: 24*i-24})
-            .randomizeMirrorY()
-            .fadeIn(500, {ease:"easeOutBack"})
-            .fadeOut(400)
-            .opacity(1)
-            .zIndex(1)
-
-        .effect()
-            .file("jb2a.energy_strands.range.standard.blue")
-            .atLocation(token, {offset:{x:0.2,y:0.2},gridUnits:true, local:true}) 
-            .delay(i * delay)
-            .stretchTo(position, {offset:{y:-1},randomOffset: 1, gridUnits: true, cacheLocation: true, local: true})
-            .filter("ColorMatrix", {hue: 24*i+96})
-            .randomizeMirrorY()
-            .fadeIn(500, {ease:"easeOutBack"})
-            .fadeOut(400)
-            .opacity(1)
-            .duration(900)
-            .zIndex(1)
-
-        .effect()
-            .file("jb2a.energy_strands.range.standard.blue")
-            .atLocation(token, {offset:{x:0.2,y:-0.2},gridUnits:true, local:true}) 
-            .delay(i * delay)
-            .stretchTo(position, {offset:{y:1},randomOffset: 1, gridUnits: true, cacheLocation: true, local:true})
-            .filter("ColorMatrix", {hue: 24*i-144})
-            .randomizeMirrorY()
-            .fadeIn(500, {ease:"easeOutBack"})
-            .fadeOut(400)
-            .opacity(1)
-            .duration(900)
-
-        .zIndex(1)
-    return seq;
+    wave_count: 4,
 }
 
 async function create(token, config) {
     const mConfig = foundry.utils.mergeObject(DEFAULT_CONFIG, config, { inplace: false });
     const { wave_count, template } = mConfig;
 
-    let position;
-    if (template) {
-        const farpoint = template._object.ray.B;        // Get the furthest point on the cone
-        position = { x: farpoint.x, y: farpoint.y };    // Decouple from the template so when it is deleted we don't crash
-    } else {
-        // TODO - better sequencer crosshairs for cones
-        position = await Sequencer.Crosshair.show();
-        if (position.cancelled) { return; }
-    }
+    const cfg = { 
+        radius: 1,
+        max: 500,
+        icon: 'modules/jb2a_patreon/Library/Generic/Portals/Portal_Bright_Purple_V_400x250.webm', 
+        label: 'Color Spray'
+    };
+    let [position, secondary] = await templates.getPosition(template, cfg);
     if (!position) { return; }
 
-    mConfig.position = position;
+    const seq = new Sequence();
+    
+    //Cast Effect
+    seq.effect()
+        .file(closest("eskie.star.02.white"))
+        .atLocation(position)
+        .size(token.document.width, {gridUnits:true})
+        .zIndex(3);
 
-    const seq = createSpellCircle(token, mConfig);
-    for (let i = 0; i < wave_count; i++) {
-        seq.addSequence(createBolt(token, i, mConfig))
+    seq.effect()
+        .file(closest("jb2a.sacred_flame.target.white"))
+        .atLocation(position)
+        .size(token.document.width*0.65, {gridUnits:true})
+        .zIndex(2)
+        .scaleIn(0, 500, {ease: "easeOutCubic"})
+        .filter("ColorMatrix", { hue: 150, brightness:1.1 })
+        .scaleOut(0, 500, {ease: "easeOutCubic"})
+        .endTime(2500);
+
+    //Color Spray Effect
+    for (let i = 0; i < wave_count; i++){
+
+        const tintColor1 = `hsl(${Math.floor(Math.random() * 360)}, 100%, 60%)`;
+        const tintColor2 = `hsl(${Math.floor(Math.random() * 360)}, 100%, 60%)`;
+        const tintColor3 = `hsl(${Math.floor(Math.random() * 360)}, 100%, 60%)`;
+
+        const wave = new Sequence();
+
+        wave.effect()
+            .file(closest("eskie.pulse.energy.03.fast.white"))
+            .atLocation(position)
+            .rotateTowards(secondary)
+            .spriteOffset({x:-token.document.width*1.1},{gridUnits:true})
+            .size(token.document.width*2, {gridUnits:true})
+            .tint(tintColor1)
+            .zIndex(2)
+            .filter("ColorMatrix", { brightness:2 });
+
+        wave.effect()
+            .file(closest("jb2a.energy_strands.range.standard.grey"))
+            .atLocation(position, {offset:{x:-0.25, y:0}, gridUnits:true, local: true})
+            .stretchTo(secondary, {offset:{x:0, y:0}, gridUnits:true, local: true})
+            .fadeIn(500, {ease:"easeOutBack"})
+            .fadeOut(400)
+            .tint(tintColor1)
+            .zIndex(1);
+
+        wave.effect()
+            .delay(150)
+            .file(closest("jb2a.energy_strands.range.standard.grey"))
+            .atLocation(position, {offset:{x:-0.25, y:0}, gridUnits:true, local: true})
+            .stretchTo(secondary, {offset:{x:-0.5, y:-1}, gridUnits:true, local: true})
+            .fadeIn(500, {ease:"easeOutBack"})
+            .fadeOut(400)
+            .mirrorY()
+            .tint(tintColor2)
+            .zIndex(1);
+
+        wave.effect()
+            .delay(300)
+            .file(closest("jb2a.energy_strands.range.standard.grey"))
+            .atLocation(position, {offset:{x:-0.25, y:0}, gridUnits:true, local: true})
+            .stretchTo(secondary, {offset:{x:-0.5, y:1}, gridUnits:true, local: true})
+            .mirrorY()
+            .fadeIn(500, {ease:"easeOutBack"})
+            .fadeOut(400)
+            .tint(tintColor3)
+            .zIndex(1);
+
+        wave.effect()
+            .delay(150)
+            .file(closest("eskie.star.twinkling_star.01.white"))
+            .atLocation({x:position.x, y:position.y}, {randomOffset: 2.2})
+            .size(0.75, {gridUnits: true})
+            .filter("ColorMatrix", {hue: Math.floor(Math.random() * 361), brightness: 1})
+            .randomSpriteRotation()
+            .scaleIn(0, 150, {ease: "easeOutBack"})
+            .duration(400)
+            .repeats(5, 100,100)
+            .zIndex(3);
+        
+        seq.addSequence(wave);
+        seq.wait(150);
     }
+    
     return seq;
 }
 
@@ -126,4 +122,4 @@ export const colorSpray = {
     play,
 }
 
-autoanimations.register('Color Spray', 'template', 'eskie.effect.colorSpray', DEFAULT_CONFIG);
+autoanimations.register('Color Spray', 'template', 'eskie.effect.colorSpray', DEFAULT_CONFIG, '1.0');

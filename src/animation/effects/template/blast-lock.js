@@ -64,7 +64,7 @@ async function create(token, config = {}) {
     const safeElevation = (token.document.elevation || 0) + 10;
 
     // 1. Select location with Crosshair
-    let position = await templates.getPosition(template, crosshair);
+    let [position, _] = await templates.getPosition(template, crosshair);
     if (!position || position.cancelled ) { return null; }
 
     // 2. Door Detection Logic

@@ -70,7 +70,7 @@ export function closest(path) {
     switch (modulePrefix) {
         // Sounds
         case 'psfx':
-            dependency.someRequired([{ id: 'psfx-patreon' }, { id: 'psfx' }]);
+            dependency.someRequired([{ id: 'psfx-patreon', ref: 'PSFX-Patreon'}, { id: 'psfx', ref: "PSFX - Peri's Sound Effects" }]);
             isPatreonUser = dependency.isActivated({ id: 'psfx-patreon', ref: 'PSFX-Patreon' });
             isFreeUser = dependency.isActivated({ id: 'psfx', ref: "PSFX - Peri's Sound Effects" });
             if (isPatreonUser && isFreeUser) 

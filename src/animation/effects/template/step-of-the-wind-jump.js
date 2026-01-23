@@ -23,7 +23,7 @@ async function create(token, config = {}) {
         icon: 'modules/jb2a_patreon/Library/Generic/Portals/Portal_Bright_Purple_V_400x250.webm', 
         label: 'Step of the Wind'
     };
-    let position = await templates.getPosition(template, cfg);
+    let [position, _] = await templates.getPosition(template, cfg);
     if (!position || position.cancelled ) { return; }
 
     // Determine Trail Direction
