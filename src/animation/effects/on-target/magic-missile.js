@@ -3,6 +3,7 @@
 
 import { closest } from "../../../lib/filemanager.js";
 import { autoanimations } from "../../../integration/autoanimations.js";
+import { system } from "../../../integration/system.js";
 
 const DEFAULT_CONFIG = {
     id: "magicMissile",
@@ -12,10 +13,8 @@ const DEFAULT_CONFIG = {
 async function create(token, target, config = {}) {
     const { id, missileCount, info } = foundry.utils.mergeObject(DEFAULT_CONFIG, config, {inplace:false});
     let mCount = missileCount;
-    if (game.system == 'dnd5e') {
-        const spellLevel = info?.systemData?.spellLevel ?? (missileCount - 2);
-        mCount = spellLevel + 2;
-    }
+    const spellLevel = system.getSpellLevel({aaHandler: info});
+    if (spellLevel) mCount = spellLevel + 2;
 
     const seq = new Sequence();
 
@@ -24,7 +23,7 @@ async function create(token, target, config = {}) {
     const orbitDirection = 1;
 
     // Dynamic orbit mapping (1 → 9)
-    const clamped = Math.min(Math.max(mCount, 1), 9);
+    const clamped = Math.clamp(mCount, 1, 9);
     const t = (clamped - 1) / 8;
 
     const orbitStartAngle = 0 + (-90 - 0) * t;   // 0 → -90
