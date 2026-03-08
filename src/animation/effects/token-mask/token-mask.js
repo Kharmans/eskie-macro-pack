@@ -46,8 +46,6 @@ async function createTiles(token, config = {}) {
         "rotation": token.document.rotation,
         "width": canvas.grid.size * token.document.width,
         "height": canvas.grid.size * token.document.height,
-        "texture.scaleX": token.document.texture.scaleX,
-        "texture.scaleY": token.document.texture.scaleY,
     };
 
     // Create all tiles
