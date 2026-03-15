@@ -67,6 +67,7 @@ async function create(token, config = {}) {
         // Sway effect attached to token
         .effect()
         .copySprite(token)
+        .scaleToObject(1, { considerTokenScale: true })
         .name(label)
         .atLocation(token)
         .loopProperty("spriteContainer", "position.x", { from: -20, to: 20, duration: 2500, pingPong: true, ease: "easeInOutSine" })

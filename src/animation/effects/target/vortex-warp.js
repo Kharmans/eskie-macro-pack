@@ -27,6 +27,7 @@ async function create(target, config = {}) {
 
     sequence = sequence.effect()
         .copySprite(target)
+        .scaleToObject(1, { considerTokenScale: true })
         .duration(500)
         .scaleOut(0, 500, { ease: "easeInOutElastic" })
         .rotateOut(180, 300, { ease: "easeOutCubic" });
@@ -55,6 +56,7 @@ async function create(target, config = {}) {
     
     sequence = sequence.effect()
         .copySprite(target)
+        .scaleToObject(1, { considerTokenScale: true })
         .scaleOut(0, 500, { ease: "easeInOutElastic" })
         .rotateIn(180, 300, { ease: "easeOutCubic" })
         .duration(500)

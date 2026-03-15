@@ -264,6 +264,7 @@ function create(token, config = {}) {
             .name(`${id} ${token.name}`)
             .copySprite(token)
             .attachTo(token)
+            .scaleToObject(1, { considerTokenScale: true })
             .mask(token)
             .opacity(0.25)
             .loopProperty("sprite", "scale.y", { from: 1, to: 1.25, duration: 2000,  ease: "easeInOutSine" })

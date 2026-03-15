@@ -36,7 +36,7 @@ async function create(token, target, config = {}) {
         .atLocation(target)
         .mirrorX(token.document.mirrorX)
         .animateProperty("spriteContainer", "position.y", { from: -1, to: 0, duration: 750, gridUnits: true, ease: "easeOutExpo" })
-        .scaleToObject(target.texture.scaleX, { considerTokenScale: true })
+        .scaleToObject(1, { considerTokenScale: true })
         .duration(750)
         .fadeOut(400)
         .opacity(0.65)

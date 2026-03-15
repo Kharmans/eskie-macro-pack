@@ -50,8 +50,9 @@ function create(token, config = {}) {
     // Levitating token sprite
     .effect()
         .name(label)
-        .attachTo(token, {bindAlpha: false})
         .copySprite(token)
+        .attachTo(token, {bindAlpha: false})
+        .scaleToObject(1, { considerTokenScale: true })
         .fadeIn(500)
         .fadeOut(500)
         .animateProperty("sprite", "position.y", { from: 0, to: -0.6, duration: 2000, gridUnits: true, ease: "easeOutCubic" })

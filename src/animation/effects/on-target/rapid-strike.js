@@ -90,7 +90,7 @@ function create(token, target, config = {}) {
                 .delay(150)
                 .copySprite(target)
                 .attachTo(target)
-                .scaleToObject(1,{considerTokenScale:true})
+                .scaleToObject(1, { considerTokenScale: true })
                 .spriteRotation(-target.document.rotation)
                 .loopProperty("sprite", "position.x", { from: -0.05, to: 0.05, duration: 50, pingPong: true, gridUnits: true})
                 .opacity(0.25)

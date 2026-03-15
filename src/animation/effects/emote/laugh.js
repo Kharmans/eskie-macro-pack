@@ -67,7 +67,7 @@ async function create(token, config = {}) {
         .effect()
         .name(id)
         .copySprite(token)
-        .scaleToObject(token.document.texture.scaleX)
+        .scaleToObject(1, { considerTokenScale: true })
         .atLocation(token)
         .attachTo(token, { bindAlpha: false })
         .loopProperty("sprite", "position.y", { from: 0, to: -0.01, duration: 150, gridUnits: true, pingPong: true, ease: "easeOutQuad" })

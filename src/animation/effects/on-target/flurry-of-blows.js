@@ -66,10 +66,10 @@ async function create(token, target, config = {}) {
     seq = seq.effect()
         .copySprite(target)
         .atLocation(target)
+        .scaleToObject(1, { considerTokenScale: true })
         .fadeIn(200)
         .fadeOut(200)
         .loopProperty("sprite", "position.x", { from: -0.05, to: 0.05, duration: 50, pingPong: true, gridUnits: true})
-        .scaleToObject(target.document.texture.scaleX)
         .duration(1750)
         .opacity(0.25);
 

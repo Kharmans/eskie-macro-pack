@@ -109,6 +109,7 @@ function createTarget(target, config = {}) {
             sequence.effect()
                 .copySprite(target)
                 .atLocation(target)
+                .scaleToObject(1, { considerTokenScale: true })
                 .filter("ColorMatrix", { brightness: 5, saturate: -1 })
                 .filter("Blur", { blurX: 10, blurY: 10 })
                 .opacity(1)

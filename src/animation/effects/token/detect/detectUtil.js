@@ -34,7 +34,7 @@ async function _createDetectionEffects(target, config = {}) {
         .copySprite(target)
         .belowTokens()
         .attachTo(target)
-        .scaleToObject(target.document.width)
+        .scaleToObject(1, { considerTokenScale: true })
         .spriteRotation(180)  // Sprite should copy token rotation -- I don't know why this is necessary...
         .filter('Glow', { color: 0xffffff, distance: 15 })
         .duration(30000)

@@ -93,6 +93,7 @@ function createDamageEffect(token, target, config = {}) {
         .effect()
         .copySprite(target)
         .attachTo(target)
+        .scaleToObject(1, { considerTokenScale: true })
         .fadeIn(200)
         .fadeOut(500)
         .loopProperty("sprite", "position.x", { from: -0.05, to: 0.05, duration: 50, pingPong: true, gridUnits: true })

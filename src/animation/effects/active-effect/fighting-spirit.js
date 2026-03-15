@@ -18,7 +18,7 @@ function create(token, config = {}) {
             .name(label)
             .copySprite(token)
             .attachTo(token)
-            .scaleToObject(1,{considerTokenScale:true})
+            .scaleToObject(1, { considerTokenScale: true })
             .filter("Glow", { color: 0xf20736,knockout:true })
             .spriteRotation(-token.document.rotation)
             .fadeIn(1000)

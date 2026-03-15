@@ -40,7 +40,7 @@ async function create(token, config, options) {
         .effect()
             .copySprite(token)
             .atLocation(token)
-            .scaleToObject(0.85, {considerTokenScale:true})
+            .scaleToObject(0.85, {considerTokenScale: true})
             .moveTowards(position, {delay: 100, rotate: false, ease: "easeOutQuint"})
             .duration(1600)
             .belowTokens()
@@ -74,7 +74,7 @@ async function create(token, config, options) {
         .effect()
             .copySprite(token)
             .atLocation(token)
-            .scaleToObject(1, {considerTokenScale:true})
+            .scaleToObject(1, {considerTokenScale: true})
             .moveTowards(position, {delay: 100, rotate: false, ease: "easeOutQuint"})    // Horizontal Movement
             .duration(1300)
             .animateProperty("spriteContainer", "position.y", { from: 0, to: -0.8, duration: 550, delay: 100, gridUnits:true, ease:"easeOutQuint"})

@@ -20,6 +20,7 @@ function targetSequence(target, config = {}) {
     seq = seq.effect()
         .copySprite(target)
         .attachTo(target)
+        .scaleToObject(1, { considerTokenScale: true })
         .spriteRotation(-target.document.rotation)
         .duration(2500) 
         .fadeOut(1000)

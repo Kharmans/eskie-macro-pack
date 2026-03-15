@@ -45,7 +45,7 @@ async function create(token, targets = [], config = {}) {
 
         .effect()
             .copySprite(token)
-            .scaleToObject(1.0, {considerTokenScale:true})
+            .scaleToObject(1, {considerTokenScale:true})
             .atLocation(token)
             .animateProperty("spriteContainer", "position.x", { from: 0, to: xdelta(pos1, pos2), duration: 500, gridUnits: true, ease: "easeOutQuint",delay: 2000+150 })
             .animateProperty("spriteContainer", "position.y", { from: 0, to: ydelta(pos1, pos2), duration: 500, gridUnits: true, ease: "easeOutQuint",delay: 2000+150 })
@@ -53,7 +53,7 @@ async function create(token, targets = [], config = {}) {
 
         .effect()
             .copySprite(token)
-            .scaleToObject(1.0, {considerTokenScale:true})
+            .scaleToObject(1, {considerTokenScale:true})
             .atLocation(token)
             .animateProperty("spriteContainer", "position.x", { from: 0, to: xdelta(pos1, pos2), duration: 500, gridUnits: true, ease: "easeOutQuint",delay: 2000+150 })
             .animateProperty("spriteContainer", "position.y", { from: 0, to: ydelta(pos1, pos2), duration: 500, gridUnits: true, ease: "easeOutQuint",delay: 2000+150 })

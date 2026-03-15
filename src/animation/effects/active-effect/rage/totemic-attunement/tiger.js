@@ -63,6 +63,7 @@ function create(token, target, config = {}) {
     .effect()
         .copySprite(token)
         .atLocation(token)
+        .scaleToObject(1, { considerTokenScale: true })
         .duration(900)
         .moveTowards(location, {relativeToCenter: true, ease:"easeOutQuint",rotate:false,delay:250, snapToGrid:true})
 

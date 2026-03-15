@@ -62,7 +62,7 @@ function _dissolve({ id, target, offset, steps, shape }) {
             .name(id)
             .atLocation({ x: target.center.x, y: target.center.y })
             .copySprite(target)
-            .scaleToObject(target.document.texture.scaleX)
+            .scaleToObject(1, { considerTokenScale: true })
             .shape("circle", stepShape)
             .duration(step.duration)
             .fadeOut(1000);
@@ -86,7 +86,7 @@ function _reform({ id, target, allSteps, shape }) {
             .name(id)
             .atLocation({ x: target.center.x, y: target.center.y })
             .copySprite(target)
-            .scaleToObject(target.document.texture.scaleX)
+            .scaleToObject(1, { considerTokenScale: true })
             .shape("circle", stepShape)
             .fadeIn(300)
             .delay(step.duration - 200 > 0 ? step.duration - 200 : step.duration)

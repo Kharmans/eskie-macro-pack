@@ -46,6 +46,7 @@ async function createMirrorImage(token, config = {}) {
         .effect()
             .copySprite(token)
             .atLocation(token)
+            .scaleToObject(1, { considerTokenScale: true })
             .belowTokens()
             .animateProperty("spriteContainer", "position.x", { from: -80, to: 80, duration: 1500, pingPong: true })
             .duration(1500)
@@ -56,6 +57,7 @@ async function createMirrorImage(token, config = {}) {
         .effect()
             .copySprite(token)
             .atLocation(token)
+            .scaleToObject(1, { considerTokenScale: true })
             .belowTokens()
             .animateProperty("spriteContainer", "position.x", { from: 80, to: -80, duration: 1500, pingPong: true })
             .duration(1500)
@@ -70,7 +72,7 @@ async function createMirrorImage(token, config = {}) {
             .name(`${label} (1)`) // Unique name for stopping
             .copySprite(token)
             .atLocation(token)
-            .scale(1)
+            .scaleToObject(1, { considerTokenScale: true })
             .anchor({ x: 0.9 + (imageNumber * 0.05) })
             .belowTokens()
             .attachTo(token, { bindAlpha: false, bindRotation: false })
@@ -87,6 +89,7 @@ async function createMirrorImage(token, config = {}) {
         .effect()
             .name(`${label} (2)`) // Unique name for stopping
             .copySprite(token)
+            .scaleToObject(1, { considerTokenScale: true })
             .playIf(imageNumber >= 2)
             .atLocation(token)
             .anchor({ x: 0.9 + (imageNumber * 0.05) })
@@ -105,6 +108,7 @@ async function createMirrorImage(token, config = {}) {
         .effect()
             .name(`${label} (3)`) // Unique name for stopping
             .copySprite(token)
+            .scaleToObject(1, { considerTokenScale: true })
             .playIf(imageNumber === 3)
             .atLocation(token)
             .anchor({ x: 0.9 + (imageNumber * 0.05) })

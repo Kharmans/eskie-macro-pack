@@ -17,9 +17,10 @@ async function create(token, config = {}) {
 
     let sequence = new Sequence()
         .effect()
-            .copySprite(token)
             .name(id)
+            .copySprite(token)
             .atLocation(token)
+            .scaleToObject(1, { considerTokenScale: true })
             .mask(token)
             .opacity(0.4)
             .filter("ColorMatrix", { contrast: 1, saturate: -1 })

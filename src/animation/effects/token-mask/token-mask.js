@@ -105,7 +105,7 @@ async function create(token, config = {}) {
         .name(label)
         .copySprite(token)
         .attachTo(token, {bindAlpha: false, bindVisibility: false, bindRotation: true})
-        .scaleToObject(paddingXY)
+        .scaleToObject(1, { considerTokenScale: true })
         .spriteRotation(-token.document.rotation)
         .mask(tokenRevealMask)
         .persist()

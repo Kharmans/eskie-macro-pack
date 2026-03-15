@@ -25,7 +25,7 @@ function create(token, config = {}) {
             .delay(delay-1000)
             .copySprite(token)
             .atLocation(token)
-            .scaleToObject(1)
+            .scaleToObject(1, { considerTokenScale: true })
             .loopProperty("sprite", "position.x", { from: -0.05, to: 0.05, duration: 50, pingPong: true, gridUnits: true})
             .duration(250)
             .opacity(0.5)
@@ -57,7 +57,7 @@ function create(token, config = {}) {
         .effect()
             .copySprite(token)
             .name(`${token.document.name}Top`)
-            .scaleToObject()
+            .scaleToObject(1, { considerTokenScale: true })
             .atLocation(token)
             .shape("polygon", {
             lineSize: 1,
@@ -81,7 +81,7 @@ function create(token, config = {}) {
         .effect()
             .copySprite(token)
             .name(`${token.document.name}Bottom`)
-            .scaleToObject()
+            .scaleToObject(1, { considerTokenScale: true })
             .atLocation(token)
             .shape("polygon", {
             lineSize: 1,

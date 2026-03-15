@@ -54,9 +54,9 @@ async function create(token, target, config = {}) {
 
         .effect()
             .copySprite(target)
-            .duration(2000)
-            .scaleToObject(target.document.texture.scaleX)
             .atLocation(target)
+            .scaleToObject(1, { considerTokenScale: true })
+            .duration(2000)
             .fadeIn(2000)
             .filter("ColorMatrix", {saturate:-1, brightness:10})
             .filter("Blur", { blurX: 5, blurY: 10 })

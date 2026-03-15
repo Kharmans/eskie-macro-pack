@@ -116,7 +116,7 @@ async function create(token, targets, config = {}) {
                 .copySprite(target)
                 .opacity(0.5)
                 .attachTo(target)
-                .scaleToObject(target.document.texture.scaleX)
+                .scaleToObject(1, { considerTokenScale: true })
                 .filter("Glow", { color: colorVal.hex, distance: 20 })
                 .duration(1000)
                 .fadeIn(500)

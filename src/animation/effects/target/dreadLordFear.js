@@ -20,11 +20,11 @@ async function create(token, target, config = {}) {
     sequence.effect()
         .copySprite(target)
         .attachTo(target)
+        .scaleToObject(1, { considerTokenScale: true })
         .fadeIn(500)
         .fadeOut(2000)
         .loopProperty("sprite", "position.x", { from: -0.05, to: 0.05, duration: 55, pingPong: true, gridUnits: true })
         .filter("ColorMatrix", { saturate: -1, brightness: 0.5 })
-        .scaleToObject(1, { considerTokenScale: true })
         .duration(5000)
         .opacity(0.65)
         .zIndex(0.1);

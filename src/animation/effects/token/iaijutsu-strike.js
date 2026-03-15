@@ -54,10 +54,10 @@ function deathAnimation(target) {
         .opacity(0)
 
     sequence.effect()
-        .copySprite(target)
         .name(`IaijutsuStrike ${target.name} Top`)
-        .scaleToObject(target.document.texture.scaleX)
+        .copySprite(target)
         .atLocation(target)
+        .scaleToObject(1, { considerTokenScale: true })
         .shape("polygon", {
                     lineSize: 1,
                     lineColor: "#FF0000",
@@ -75,10 +75,10 @@ function deathAnimation(target) {
         .fadeOut(1000)
 
     sequence.effect()
-        .copySprite(target)
         .name(`IaijutsuStrike ${target.name} Bottom`)
-        .scaleToObject(target.document.texture.scaleX)
+        .copySprite(target)
         .atLocation(target)
+        .scaleToObject(1, { considerTokenScale: true })
         .shape("polygon", {
                     lineSize: 1,
                     lineColor: "#FF0000",
