@@ -1,0 +1,17 @@
+{
+  "skill_name": "discord-effect-converter",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Convert the legacy Banishment script from discord-animations/completed/Banishment_Final(1).js into the new modular format. Apply all styling rules.",
+      "expected_output": "A modular Javascript file exporting a 'banishment' object with 'create', 'play', 'stop' functions matching the references/template_active_effect.js pattern.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Convert the legacy Misty Step script from discord-animations/completed/Misty_Step.js into the new modular format. Apply all styling rules.",
+      "expected_output": "A modular Javascript file exporting a 'mistyStep' object with 'create', 'play', 'stop' functions matching the references/template_token.js pattern.",
+      "files": []
+    }
+  ]
+}

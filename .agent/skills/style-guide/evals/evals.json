@@ -1,0 +1,11 @@
+{
+  "skill_name": "style-guide",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Format the following code snippet according to the style guide:\n\nfunction doThing() \n{\n    console.log(\"doing thing\")\n\tlet x = 1\n\tif(x == 1)\n\t\treturn true\n}",
+      "expected_output": "The code should be formatted with 4-space indentation, semicolons, single quotes, 1TBS brace style, single-line if-statements, and 'EMP | ' prefix on console.log.",
+      "files": []
+    }
+  ]
+}
