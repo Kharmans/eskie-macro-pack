@@ -86,6 +86,7 @@ import { stunningFist } from "./on-target/stunning-fist.js";
 import { stunningStrike } from "./target/stunning-strike.js";
 import { suggestion } from "./target/suggestion.js";
 import { surprised } from "./token/surprised.js";
+import { tashasCausticBrew } from "./template/tashas-caustic-brew.js";
 import { tearMask } from "./token-mask/tear-mask.js";
 import { teleport } from "./template/teleport.js";
 import { totemicAttunement } from "./active-effect/rage/totemic-attunement/_attunement.js";
@@ -182,6 +183,7 @@ export const effect = {
     stunningStrike,
     suggestion,
     surprised,
+    tashasCausticBrew,
     teleport,
     totemicAttunement,
     tokenMask: {
