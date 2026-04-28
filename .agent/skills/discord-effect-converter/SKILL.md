@@ -7,8 +7,11 @@ compatibility: Foundry VTT V11+
 # Discord Animation to Modular Format Conversion
 
 When asked to update scripts in the `new-submissions` folder or to convert Discord animations to the modular format, execute the following transformations. You MUST reference the template files in the `references/` directory to understand the exact target structure:
-- For standard or token animations, read `references/template_token.js`
-- For active effects, read `references/template_active_effect.js`
+- For standard or token animations, read `references/template_token.js`. Save these to `src/animation/effects/token/` or `on-target/`.
+- For active effects, read `references/template_active_effect.js`. Save these to `src/animation/effects/active-effect/`.
+
+> [!NOTE]
+> If a legacy script utilizes a position or crosshair (`warpgate.crosshairs.show`) to place effects at, it is considered a **template-driven** effect. You MUST read `references/template_template.js` to understand its unique structure. These should be saved to `src/animation/effects/template/`.
 
 ## Code Style
 
@@ -16,13 +19,13 @@ When asked to update scripts in the `new-submissions` folder or to convert Disco
 
 ## General Transformations
 
-*   **Modular Structure:** Encapsulate the animation logic within an `export async function create(source, target(s) (optional), config)` function. This function MUST return a `Sequence` object. Replace any global `token` and `target` variables with the `source` and `target` arguments passed to the functions.
-*   **Play Function:** Export an `async function play(source, target(s) (optional), config)` function that executes the sequence created by the `create` function.
-*   **Stop Function:** Export an `async function stop(source, { id = 'effectId' } = {})` function to support stopping persistent effects.
+*   **Modular Structure:** Encapsulate the animation logic within an `export async function create(...)` function. This function MUST return a `Sequence` object.
+*   **Root Exports:** The final module MUST export an object containing `create`, `play`, and `stop` at its root level. The `create` method is absolutely mandatory because the Automated Animations system directly calls `animation.create(token, config)`!
 *   **Parameter Handling:**
-    *   Pass the casting token as `source`.
-    *   Pass target tokens as an array `targetTokens` or as a singular `target`.
-    *   Manage animation-specific configurations via a `config` object (passed as the last argument) to support default values and user overrides.
+    *   **Token & Active Effects:** Pass the casting token as `source`. Pass target tokens as an array `targetTokens` or as a singular `target`. Pass configurations as `config`. Signature: `(source, targetTokens, config = {})`
+    *   **Template Effects:** Template effects only receive two arguments: `(source, config = {})`. Target tokens MUST be extracted via `config.targets?.length ? config.targets : Array.from(game.user.targets)`.
+*   **Template Positioning:** If `config.template` exists, you MUST prioritize extracting the position from it (e.g., `config.template._object?.ray?.B`) instead of spawning a `Sequencer.Crosshair`. Refer to `template_template.js`.
+*   **Multi-Target Timing:** When iterating over multiple targets with a delay (e.g., waiting 2 seconds before striking each), do NOT chain `.wait()` sequentially on the main sequence. You MUST create a new isolated Sequence for each target (`let targetSeq = new Sequence().wait(1000)`) and add it to the main sequence using `sequence.addSequence(targetSeq)`. This prevents cumulative, compounding delays.
 *   **File Relocation:** Move the newly converted file from its input folder (e.g., `new-submissions`) to `src/animation/effects/`.
 *   **Module Integration:** Update `src/animation/effects/_effects.js` to import and export the new modular animation.
 *   **Variable Renaming:** Rename global variables like `targets` to `targetTokens` to fit the modular function signature.
