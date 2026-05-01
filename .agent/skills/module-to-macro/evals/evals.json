@@ -1,0 +1,15 @@
+{
+  "skill_name": "module-to-macro",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Please convert the Tasha's Caustic Brew animation in src/animation/effects/template/tashas-caustic-brew.js into a standalone macro.",
+      "expected_output": "A standalone JS macro utilizing the Sequencer library without import statements."
+    },
+    {
+      "id": 2,
+      "prompt": "Turn the Rage effect into a macro for me.",
+      "expected_output": "The agent stops and asks the user to clarify which variant of Rage they want."
+    }
+  ]
+}
