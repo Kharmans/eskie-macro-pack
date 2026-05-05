@@ -5,14 +5,15 @@ const DEFAULT_CONFIG = {
     deleteToken: false,
     center: true,
     color: 'white',
-    rotation: 0
+    rotation: 0,
+    tint: undefined
 };
 
 async function create(token, config = {}) {
-    const { id, deleteToken, center, color, rotation } = foundry.utils.mergeObject(DEFAULT_CONFIG, config, { inplace: false });
+    const { id, deleteToken, center, color, rotation, tint } = foundry.utils.mergeObject(DEFAULT_CONFIG, config, { inplace: false });
     const tokenOverlay = `eskie.wounds.token_mask.shatter.${center ? 'center' : 'side'}.01.${color}.no_base`;
     const revealOverlay = `eskie.texture_mask.tile_base.shatter.${center ? 'center' : 'side'}.01`;
-    return tokenMaskEffect.create(token, { id, deleteToken, tokenOverlay, revealOverlay, rotation });
+    return tokenMaskEffect.create(token, { id, deleteToken, tokenOverlay, revealOverlay, rotation, tint });
 }
 
 async function play(token, config = {}) {

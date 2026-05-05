@@ -94,6 +94,7 @@ import { trueStrike } from "./target/true-strike.js";
 import { viciousMockery } from "./target/vicious-mockery.js";
 import { vortexWarp } from "./target/vortex-warp.js";
 import { wingsV2 } from "./token/wings-v2.js";
+import { swordArtOnlineDeath } from "./token/sword-art-online.js";
 
 export const effect = {
     animateDead,
@@ -196,4 +197,5 @@ export const effect = {
     viciousMockery,
     vortexWarp,
     wingsV2,
+    swordArtOnlineDeath,
 };
